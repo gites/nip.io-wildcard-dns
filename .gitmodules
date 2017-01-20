@@ -1,0 +1,6 @@
+[submodule "roles/ansible-powerdns"]
+	path = roles/ansible-powerdns
+	url = https://github.com/gites/ansible-powerdns
+[submodule "roles/nip.io"]
+	path = roles/nip.io
+	url = https://github.com/gites/ansible-nip.io

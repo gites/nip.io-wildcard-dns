@@ -1,0 +1,24 @@
+- hosts: all
+  roles:
+    - nip.io
+
+- hosts: all
+  pre_tasks:
+    - name: set pipe module names
+      set_fact:
+        powerdns_authoritative_launch:  "{{ powerdns_authoritative_launch|default([]) }} + [ 'pipe:{{ item }}' ]"
+      with_items:
+        - "{{ nip_domains }}"
+    - name: set pipe module commands
+      set_fact:
+        powerdns_pipe_command: "{{ powerdns_pipe_command|default({}) | combine({ item.0: [ item.1,item.0,'backend.py']|join('/')}) }}"
+      with_nested: 
+        - "{{ nip_domains }}"
+        - "{{ nip_dir }}"
+    - name: set pipe module regex
+      set_fact:
+        powerdns_pipe_regex: "{{ powerdns_pipe_regex|default({}) | combine({ item: ['.*', item, '$']|join('') }) }}"
+      with_items:
+        - "{{ nip_domains }}"
+  roles:
+    - ansible-powerdns
